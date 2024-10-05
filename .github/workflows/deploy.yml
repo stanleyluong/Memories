@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - master  # Ensure this matches the branch you push from
+      - master
 
 jobs:
   build:
@@ -30,9 +30,11 @@ jobs:
         echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" >> .env.production
         npm run build
 
+    - name: Set up GitHub credentials
+      run: |
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/stanleyluong/Memories.git
+
     - name: Deploy to GitHub Pages
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the built-in GITHUB_TOKEN
       run: |
         npm install gh-pages -g
         gh-pages -d build
