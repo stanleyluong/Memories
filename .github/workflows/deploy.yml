@@ -20,6 +20,11 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Configure Git user
+      run: |
+        git config --global user.email "your-email@example.com"
+        git config --global user.name "Your Name"
+    
     - name: Build project
       run: |
         echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" >> .env.production
