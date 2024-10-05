@@ -6,7 +6,7 @@ import Home from './components/Home/Home'
 import Auth from "./components/Auth/Auth";
 
 const App = () => (
-    <BrowserRouter>
+    <BrowserRouter basename="/Memories">
         <Container maxWidth='lg'>
             <Navbar />
             <Switch>
