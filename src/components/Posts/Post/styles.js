@@ -6,12 +6,10 @@ export default makeStyles({
     paddingTop: '56.25%',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     backgroundBlendMode: 'darken',
-  },
-  border: {
-    border: 'solid',
-  },
-  fullHeightCard: {
-    height: '100%',
+    transition: 'transform 0.3s ease',  // Optional, for zooming the image slightly
+    '&:hover': {
+      transform: 'scale(1.03)',         // Slight zoom on hover
+    },
   },
   card: {
     display: 'flex',
@@ -20,6 +18,18 @@ export default makeStyles({
     borderRadius: '15px',
     height: '100%',
     position: 'relative',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease', // Smooth transition for hover effects
+    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',  // Initial shadow
+    '&:hover': {
+      transform: 'translateY(-10px)',  // Move the card up slightly on hover
+      boxShadow: '0 10px 15px rgba(0, 0, 0, 0.3)',  // Increase shadow on hover
+    },
+  },
+  border: {
+    border: 'solid',
+  },
+  fullHeightCard: {
+    height: '100%',
   },
   overlay: {
     position: 'absolute',

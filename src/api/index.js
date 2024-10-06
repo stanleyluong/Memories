@@ -2,6 +2,7 @@ import axios from 'axios';
 
 // Dynamically set the baseURL based on environment
 const API = axios.create({
+    // eslint-disable-next-line no-undef
     baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001'
 });
 
