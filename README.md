@@ -1,70 +1,137 @@
-# Getting Started with Create React App
+I see! Here's the corrected version of your README, reflecting the separation between the frontend and backend repositories:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+# Memories App
 
-In the project directory, you can run:
+![Memories App Screenshot](src/images/memories.png)
 
-### `npm start`
+Memories is a social media application that allows users to post and share their memories with others. Users can create, edit, delete, and like posts, as well as authenticate using Google OAuth. The app is built using the MERN stack (MongoDB, Express, React, Node.js).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Table of Contents
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Repositories](#repositories)
+- [Setup Instructions](#setup-instructions)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Create, edit, and delete memories (posts)
+- Like posts
+- Authentication with Google OAuth
+- Search and filter posts by title, message, creator, or tags
+- Responsive design for both desktop and mobile devices
+- Modal view for image zooming with close functionality
+- Interactive hover effect for posts
 
-### `npm run build`
+## Technologies Used
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Frontend:**
+  - React
+  - Material-UI (MUI) components
+  - Axios for HTTP requests
+- **Backend:**
+  - Node.js
+  - Express.js
+  - MongoDB (Mongoose)
+  - JWT Authentication
+- **Authentication:**
+  - Google OAuth 2.0
+- **Deployment:**
+  - Frontend: GitHub Pages
+  - Backend: Heroku
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Repositories
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Frontend:** [Memories Repository](https://github.com/stanleyluong/Memories)
+- **Backend:** [Memories Backend Repository](https://github.com/stanleyluong/Memories-backend)
 
-### `npm run eject`
+## Setup Instructions
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Prerequisites:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Node.js installed
+- MongoDB database setup
+- Google OAuth credentials created
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### 1. Clone the Repositories:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+#### Frontend:
 
-## Learn More
+```bash
+git clone https://github.com/stanleyluong/Memories.git
+cd Memories
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### Backend:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+git clone https://github.com/stanleyluong/Memories-backend.git
+cd Memories-backend
+npm install
+```
 
-### Code Splitting
+### 2. Environment Variables:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#### Backend:
 
-### Analyzing the Bundle Size
+Create a `.env` file in the `Memories-backend` directory with the following:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+PORT=5001
+MONGO_URI=your-mongodb-uri
+JWT_SECRET=your-jwt-secret
+```
 
-### Making a Progressive Web App
+#### Frontend:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+In the `Memories` project, create a `.env` file with the following:
 
-### Advanced Configuration
+```bash
+REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id
+REACT_APP_BACKEND_URL=https://your-backend-url.com
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 3. Running the Application:
 
-### Deployment
+#### Backend:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+cd Memories-backend
+npm start
+```
 
-### `npm run build` fails to minify
+#### Frontend:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+cd Memories
+npm start
+```
+
+### 4. Access the App:
+
+- Open your browser and go to `http://localhost:3000`.
+
+## Usage
+
+- **Create Posts:** Fill out the form to create a new post, add a title, message, tags, and an image.
+- **Edit/Delete Posts:** If you are the creator of a post, you will see the edit and delete buttons on the post.
+- **Like Posts:** Click the like button to like a post.
+- **Google OAuth:** Sign in with your Google account to create, like, and manage your posts.
+
+## Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/stanleyluong/Memories/issues).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+This version should now match your project's structure! Let me know if you need further adjustments.

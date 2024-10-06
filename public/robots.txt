@@ -1,3 +1,8 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /api/
+Disallow: /login/
+Disallow: /user/
+Disallow: /Memories/form/
+
+Sitemap: https://www.stanleyluong.com/Memories/sitemap.xml
