@@ -1,4 +1,3 @@
-I see! Here's the corrected version of your README, reflecting the separation between the frontend and backend repositories:
 
 ---
 
