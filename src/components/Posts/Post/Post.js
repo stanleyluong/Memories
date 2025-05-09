@@ -1,40 +1,39 @@
-import React, { useState } from "react";
 import {
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Button,
-  Typography,
+    Avatar,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    IconButton,
+    Typography,
 } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbUpAltOutlined from "@material-ui/icons/ThumbUpAltOutlined";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 import moment from "moment";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { deletePost, likePost } from "../../../actions/posts";
-import useStyles from "./styles";
 import ImageModal from "./ImageModal";
+import useStyles from "./styles";
 
 const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("profile"));
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const [openImageModal, setOpenImageModal] = useState(false);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const currentUserId = user?.result?.sub || user?.result?.googleId || user?.result?.id;
+
+  const handleOpenImageModal = () => setOpenImageModal(true);
+  const handleCloseImageModal = () => setOpenImageModal(false);
 
   const Likes = () => {
-    if (post.likes.length > 0) {
-      return post.likes.find(
-        (like) => like === (user?.result?.googleId || user?.result?._id),
-      ) ? (
+    if (post.likes?.length > 0) {
+      const isLikedByCurrentUser = post.likes.find((like) => like === currentUserId);
+      return isLikedByCurrentUser ? (
         <>
           <ThumbUpAltIcon fontSize="small" />
           &nbsp;
@@ -56,71 +55,99 @@ const Post = ({ post, setCurrentId }) => {
       </>
     );
   };
+
+  const isCreator = post?.creator === currentUserId;
+
   return (
     <Card className={classes.card}>
-      <CardMedia
-        className={classes.media}
-        image={post.selectedFile}
-        title={post.title}
-        src={post.title}
-        onClick={handleOpen}
-      />
-      <div className={classes.overlay}>
-        <Typography variant="h6">{post.name}</Typography>
-        <Typography variant="body2">
-          {moment(post.createdAt).fromNow()}
-        </Typography>
-      </div>
-      {(user?.result?.googleId === post?.creator ||
-        user?.result?._id === post?.creator) && (
-        <div className={classes.overlay2}>
-          <Button
-            style={{ color: "white" }}
-            size="small"
-            onClick={() => setCurrentId(post._id)}
-          >
-            <EditIcon />
-          </Button>
+      <div className={classes.cardHeader}>
+        <Avatar 
+          className={classes.avatar}
+          alt={post.name} 
+        >
+          {post.name?.charAt(0)?.toUpperCase()}
+        </Avatar>
+        <div className={classes.creatorInfo}>
+          <Typography className={classes.creatorName} variant="body1">
+            {post.name}
+          </Typography>
+          <Typography className={classes.timestamp} variant="caption">
+            {moment(post.createdAt).fromNow()}
+          </Typography>
         </div>
-      )}
-      <div className={classes.details}>
-        <Typography variant="body2" color="textSecondary">
-          {post.tags.map((tag) => `#${tag.trim()} `)}
-        </Typography>
+        {isCreator && (
+          <IconButton 
+            style={{ marginLeft: 'auto', color: '#8e8e8e' }}
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentId(post.id);
+            }}
+          >
+            <EditIcon fontSize="small" />
+          </IconButton>
+        )}
       </div>
-      <Typography className={classes.title} variant="h5" gutterBottom>
-        {post.title}
-      </Typography>
+
+      {post.selectedFile && (
+        <CardMedia
+          className={classes.media}
+          image={post.selectedFile}
+          title={post.title}
+          onClick={handleOpenImageModal}
+        />
+      )}
+
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography className={classes.title} variant="h6" component="h2">
+          {post.title}
+        </Typography>
+        <Typography className={classes.message} variant="body2" component="p">
           {post.message}
         </Typography>
+         {post.tags && post.tags.length > 0 && (
+          <div className={classes.details}>
+            <Typography variant="body2" color="textSecondary" className={classes.tags}>
+              {post.tags.map((tag) => `#${tag.trim()} `)}
+            </Typography>
+          </div>
+        )}
       </CardContent>
+
       <CardActions className={classes.cardActions}>
         <Button
           size="small"
-          color="primary"
+          className={classes.actionButton}
           disabled={!user?.result}
-          onClick={() => dispatch(likePost(post._id))}
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch(likePost(post.id));
+          }}
         >
           <Likes />
         </Button>
-        {(user?.result?.sub === post?.creator ||
-          user?.result?._id === post?.creator) && (
+        {isCreator && (
           <Button
             size="small"
-            color="primary"
-            onClick={() => dispatch(deletePost(post._id))}
+            className={classes.actionButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatch(deletePost(post.id));
+            }}
           >
-            <DeleteIcon fontSize="small" /> Delete
+            <DeleteIcon fontSize="small" />
+            &nbsp;Delete 
           </Button>
         )}
       </CardActions>
-      <ImageModal
-        open={open}
-        handleClose={handleClose}
-        imageUrl={post.selectedFile}
-      />
+
+      {post.selectedFile && (
+          <ImageModal
+            open={openImageModal}
+            handleClose={handleCloseImageModal}
+            imageUrl={post.selectedFile}
+          />
+      )}
     </Card>
   );
 };

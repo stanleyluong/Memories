@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Avatar, Button, Menu, MenuItem, Toolbar, Typography } from "@material-ui/core";
 import decode from "jwt-decode";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -13,10 +13,22 @@ const Navbar = () => {
   const history = useHistory();
   const location = useLocation();
 
-  const logout = useCallback(() => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const menuOpen = Boolean(anchorEl);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = useCallback(() => {
     dispatch({ type: "LOGOUT" });
     history.push("/");
     setUser(null);
+    handleMenuClose();
   }, [dispatch, history]);
 
   useEffect(() => {
@@ -24,14 +36,14 @@ const Navbar = () => {
 
     if (token) {
       const decodedToken = decode(token);
-      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+      if (decodedToken.exp * 1000 < new Date().getTime()) handleLogout();
     }
 
     setUser(JSON.parse(localStorage.getItem("profile")));
-  }, [location, logout, user?.token]);
+  }, [location, handleLogout, user?.token]);
 
   return (
-    <AppBar className={classes.appBar} position="static" color="inherit">
+    <AppBar className={classes.appBar} position="static">
       <div className={classes.brandContainer}>
         <Typography
           component={Link}
@@ -47,24 +59,39 @@ const Navbar = () => {
       <Toolbar className={classes.toolbar}>
         {user ? (
           <div className={classes.profile}>
-            <Avatar
-              className={classes.purple}
-              alt={user.result.name}
-              src={user.result.imageUrl}
+            <Button 
+              aria-controls="profile-menu"
+              aria-haspopup="true"
+              onClick={handleMenuOpen}
+              className={classes.profileButton}
+              color="inherit"
             >
-              {user.result.name}
-            </Avatar>
-            <Typography className={classes.userName} variant="h6">
-              {user.result.email}
-            </Typography>
-            <Button
-              variant="contained"
-              className={classes.logout}
-              color="secondary"
-              onClick={logout}
-            >
-              Logout
+              <Avatar
+                className={classes.purple}
+                alt={user.result.name}
+                src={user.result.imageUrl}
+              >
+                {user.result.name.charAt(0)}
+              </Avatar>
+              <Typography className={classes.userName} variant="h6">
+                {user.result.name}
+              </Typography>
             </Button>
+            <Menu
+              id="profile-menu"
+              anchorEl={anchorEl}
+              open={menuOpen}
+              onClose={handleMenuClose}
+              keepMounted
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              getContentAnchorEl={null}
+            >
+              <MenuItem onClick={handleMenuClose} disabled>
+                <Typography variant="caption">{user.result.email}</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
           </div>
         ) : (
           <Button
@@ -72,6 +99,7 @@ const Navbar = () => {
             to="/login"
             variant="contained"
             color="primary"
+            className={classes.signInButton}
           >
             Sign In
           </Button>

@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { TextField, Button, Typography, Paper } from "@material-ui/core";
+import { Button, CircularProgress, Paper, TextField, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useStyles from "./styles";
 import { createPost, updatePost } from "../../actions/posts";
+import useStyles from "./styles";
 
-const Form = ({ currentId, setCurrentId }) => {
+const Form = ({ currentId, setCurrentId, closeFormModal }) => {
   const [postData, setPostData] = useState({
     title: "",
     message: "",
     tags: "",
     selectedFile: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const post = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null,
+    currentId && Array.isArray(state.posts) ? state.posts.find((p) => p.id === currentId) : null,
   );
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -20,19 +22,38 @@ const Form = ({ currentId, setCurrentId }) => {
 
   useEffect(() => {
     if (post) setPostData(post);
-  }, [post]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (currentId) {
-      dispatch(
-        updatePost({ ...currentId, name: user?.result?.name }, postData),
-      );
-    } else {
-      dispatch(createPost({ ...postData, name: user?.result?.name }));
+    else if (!currentId) {
+        setPostData({ title: "", message: "", tags: "", selectedFile: "" });
     }
-    clear();
+  }, [post, currentId]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!postData.title || !postData.message) {
+        alert("Title and Message are required!"); 
+        return;
+    }
+    setIsSubmitting(true);
+    const payload = { ...postData, name: user?.result?.name };
+    let success = false;
+
+    try {
+      if (currentId) {
+        await dispatch(updatePost(currentId, payload));
+      } else {
+        await dispatch(createPost(payload));
+      }
+      success = true;
+    } catch (error) {
+      console.error("Form submission error caught in component:", error);
+      alert(`Error: ${error.response?.data?.message || error.message || 'Could not save memory.'}`);
+    } finally {
+      setIsSubmitting(false);
+      if (success) {
+        clear();
+        if (closeFormModal) closeFormModal();
+      }
+    }
   };
 
   if (!user?.result?.email) {
@@ -48,6 +69,8 @@ const Form = ({ currentId, setCurrentId }) => {
   const clear = () => {
     setCurrentId(null);
     setPostData({ title: "", message: "", tags: "", selectedFile: "" });
+    if (closeFormModal && !currentId) closeFormModal();
+    if (closeFormModal) closeFormModal();
   };
 
   const handleFileChange = (e) => {
@@ -69,9 +92,6 @@ const Form = ({ currentId, setCurrentId }) => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">
-          {currentId ? "Editing" : "Creating"} a Memory
-        </Typography>
         <TextField
           name="title"
           variant="outlined"
@@ -100,10 +120,9 @@ const Form = ({ currentId, setCurrentId }) => {
             setPostData({ ...postData, tags: e.target.value.split(",") })
           }
         />
-        <div className={classes.fileInput}>
+        <div className={classes.fileInputContainer}>
           <input
             accept="image/*"
-            className={classes.input}
             id="contained-button-file"
             type="file"
             onChange={handleFileChange}
@@ -111,10 +130,10 @@ const Form = ({ currentId, setCurrentId }) => {
           />
           <label htmlFor="contained-button-file">
             <Button
-              variant="contained"
-              color="default"
+              variant="outlined"
+              color="primary"
               component="span"
-              style={{ borderRadius: "20px", backgroundColor: "#f0f0f0" }}
+              className={classes.fileInputButton}
             >
               Choose File
             </Button>
@@ -127,17 +146,16 @@ const Form = ({ currentId, setCurrentId }) => {
           size="large"
           type="submit"
           fullWidth
-          style={{ borderRadius: "20px" }}
+          disabled={isSubmitting}
         >
-          Submit
+          {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Submit'}
         </Button>
         <Button
-          variant="contained"
-          color="secondary"
+          variant="outlined"
           size="small"
           onClick={clear}
           fullWidth
-          style={{ borderRadius: "20px" }}
+          className={classes.buttonClear}
         >
           Clear
         </Button>

@@ -1,43 +1,60 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { deepPurple } from "@material-ui/core/colors";
 
 export default makeStyles((theme) => ({
   appBar: {
-    borderRadius: 15,
-    margin: "30px 0",
+    margin: '0 0 30px 0',
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "10px 50px",
+    padding: theme.spacing(1.5, 3),
+    backgroundColor: '#ffffff',
+    boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.06), 0px 4px 5px 0px rgba(0,0,0,0.04), 0px 1px 10px 0px rgba(0,0,0,0.03)',
   },
   heading: {
-    color: "rgba(0,183,255, 1)",
+    color: '#333333',
     textDecoration: "none",
+    fontSize: '2rem',
+    fontWeight: 'bold',
   },
   image: {
-    marginLeft: "15px",
+    marginLeft: theme.spacing(2),
+    height: '45px',
   },
   toolbar: {
     display: "flex",
     justifyContent: "flex-end",
-    width: "400px",
+    gap: theme.spacing(2),
   },
   profile: {
     display: "flex",
-    justifyContent: "space-between",
-    width: "400px",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: theme.spacing(1.5),
   },
   userName: {
     display: "flex",
     alignItems: "center",
+    marginLeft: theme.spacing(1),
   },
   brandContainer: {
     display: "flex",
     alignItems: "center",
   },
   purple: {
-    color: theme.palette.getContrastText(deepPurple[500]),
-    backgroundColor: deepPurple[500],
+    color: theme.palette.getContrastText(theme.palette.primary.main),
+    backgroundColor: theme.palette.primary.main,
   },
+  logout: {
+    marginLeft: theme.spacing(2),
+  },
+  signInButton: {
+  },
+  profileButton: {
+    textTransform: 'none',
+    padding: theme.spacing(0.5, 1),
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.04)'
+    }
+  }
 }));

@@ -7,17 +7,37 @@ export default makeStyles((theme) => ({
     },
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
+    borderRadius: '12px',
+    backgroundColor: '#ffffff',
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
   },
   form: {
     display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "center",
+    flexDirection: "column",
+    gap: theme.spacing(2.5),
   },
-  fileInput: {
-    margin: "10px 0",
+  formTitle: {
+    textAlign: "center",
+    marginBottom: theme.spacing(1),
+    fontWeight: "bold",
+    fontSize: "1.5rem",
+    color: "#333333",
+  },
+  fileInputContainer: {
+    display: "flex",
+    marginTop: theme.spacing(1),
+  },
+  fileInputButton: {
+    // We will style this directly in Form.js for now using Button props
   },
   buttonSubmit: {
-    marginBottom: 10,
+    padding: theme.spacing(1.25, 0),
+    fontSize: "0.95rem",
+    fontWeight: "600",
+  },
+  buttonClear: {
+    padding: theme.spacing(1, 0),
+    fontSize: "0.9rem",
   },
 }));

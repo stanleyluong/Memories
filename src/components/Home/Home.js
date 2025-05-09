@@ -1,24 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { Container, Grow, Grid } from "@material-ui/core";
-import SearchBar from "../SearchBar/SearchBar";
-import Posts from "../Posts/Posts";
-import Form from "../Form/Form";
+import { Container, Dialog, DialogContent, DialogTitle, Fab, Grid, Grow } from "@material-ui/core";
+import AddIcon from '@material-ui/icons/Add';
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useStyles from "./styles";
 import { getPosts } from "../../actions/posts";
+import Form from "../Form/Form";
+import Posts from "../Posts/Posts";
+import SearchBar from "../SearchBar/SearchBar";
+import useStyles from "./styles";
 
 const Home = () => {
   const [currentId, setCurrentId] = useState(null);
+  const [openFormModal, setOpenFormModal] = useState(false);
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const posts = useSelector((state) => state.posts);
   const classes = useStyles();
 
+  const handleOpenFormModal = () => {
+    setOpenFormModal(true);
+  };
+
+  const handleCloseFormModal = () => {
+    setOpenFormModal(false);
+  };
+  
+  const handleEditPost = (id) => {
+    setCurrentId(id);
+    handleOpenFormModal();
+  };
+
   useEffect(() => {
     dispatch(getPosts());
-  }, [currentId, dispatch]);
+  }, [dispatch]);
 
-  const filteredPosts = posts.filter(
+  const filteredPosts = posts?.length > 0 ? posts.filter(
     (post) =>
       (post.name &&
         post.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -30,7 +45,7 @@ const Home = () => {
         )) ||
       (post.title &&
         post.title.toLowerCase().includes(searchQuery.toLowerCase())),
-  );
+  ) : [];
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -38,23 +53,41 @@ const Home = () => {
 
   return (
     <Grow in>
-      <Container className={classes.container}>
+      <Container className={classes.container} maxWidth="lg">
         <div className={classes.spacer}></div>
         <SearchBar onSearch={handleSearch} />
         <div className={classes.spacer}></div>
         <Grid
           container
-          justifyContent="space-between"
-          alignItems="stretch"
+          justifyContent="center"
           spacing={3}
+          className={classes.mainContainer}
         >
-          <Grid item xs={12} sm={7}>
-            <Posts setCurrentId={setCurrentId} posts={filteredPosts} />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Form currentId={currentId} setCurrentId={setCurrentId} />
+          <Grid item xs={12} sm={10} md={8}>
+            <Posts setCurrentId={handleEditPost} posts={filteredPosts} />
           </Grid>
         </Grid>
+
+        <Dialog open={openFormModal} onClose={handleCloseFormModal} aria-labelledby="form-dialog-title" fullWidth maxWidth="sm">
+          <DialogTitle id="form-dialog-title" style={{textAlign: 'center', fontWeight: 'bold'}}>
+            {currentId ? 'Edit Your Memory' : 'Create a New Memory'}
+          </DialogTitle>
+          <DialogContent>
+            <Form currentId={currentId} setCurrentId={setCurrentId} closeFormModal={handleCloseFormModal} />
+          </DialogContent>
+        </Dialog>
+
+        <Fab 
+          color="primary" 
+          aria-label="add memory"
+          className={classes.fab} 
+          onClick={() => {
+            setCurrentId(null);
+            handleOpenFormModal();
+          }}
+        >
+          <AddIcon />
+        </Fab>
       </Container>
     </Grow>
   );
