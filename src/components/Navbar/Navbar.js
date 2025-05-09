@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
-import { AppBar, Avatar, Toolbar, Typography, Button } from "@material-ui/core";
-import useStyles from "./styles";
-import memories from "../../images/memories.png";
-import { useDispatch } from "react-redux";
+import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
 import decode from "jwt-decode";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import memories from "../../images/memories.png";
+import useStyles from "./styles";
 
 const Navbar = () => {
   const classes = useStyles();
@@ -69,7 +69,7 @@ const Navbar = () => {
         ) : (
           <Button
             component={Link}
-            to="/auth"
+            to="/login"
             variant="contained"
             color="primary"
           >
