@@ -81,8 +81,8 @@ const Post = ({ post, setCurrentId }) => {
           </Typography>
           <Typography className={classes.timestamp} variant="caption">
             {console.log(`Post ID: ${post.id}, createdAt raw: ${post.createdAt}, typeof: ${typeof post.createdAt}`)}
-            {moment(post.createdAt).fromNow()}
-          </Typography>
+            {moment.utc(post.createdAt).local().fromNow()}
+            </Typography>
         </div>
         {isCreator && (
           <IconButton 
