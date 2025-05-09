@@ -32,12 +32,34 @@ export default makeStyles((theme) => ({
     // We will style this directly in Form.js for now using Button props
   },
   buttonSubmit: {
-    padding: theme.spacing(1.25, 0),
-    fontSize: "0.95rem",
+    fontSize: "0.9rem",
     fontWeight: "600",
+    borderRadius: theme.shape.borderRadius * 2,
+    transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
+    boxShadow: 'none',
+    textTransform: 'none',
+    padding: theme.spacing(1, 3),
+    '&:hover': {
+      boxShadow: `0px 2px 4px -1px ${theme.palette.primary.dark}40`,
+      backgroundColor: theme.palette.primary.dark,
+    }
   },
   buttonClear: {
-    padding: theme.spacing(1, 0),
     fontSize: "0.9rem",
+    borderRadius: theme.shape.borderRadius * 2,
+    textTransform: 'none',
+    padding: theme.spacing(1, 3),
+    borderColor: theme.palette.grey[400],
+    color: theme.palette.grey[700],
+    transition: 'background-color 0.3s ease, border-color 0.3s ease',
+    '&:hover': {
+      borderColor: theme.palette.grey[600],
+      backgroundColor: theme.palette.grey[100],
+    }
   },
+  buttonsContainer: {
+    display: 'flex',
+    gap: theme.spacing(2),
+    marginTop: theme.spacing(1),
+  }
 }));

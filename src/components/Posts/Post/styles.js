@@ -12,6 +12,7 @@ export default makeStyles((theme) => ({
   card: {
     display: 'flex',
     flexDirection: 'column',
+    width: '100%', // Ensure card takes full width of its container
     borderRadius: '12px', // Softer, more modern radius
     position: 'relative',
     backgroundColor: '#ffffff', // Explicitly white card
@@ -73,11 +74,17 @@ export default makeStyles((theme) => ({
     justifyContent: 'space-between',
     borderTop: '1px solid #efefef', // Subtle separator like Instagram
   },
-  actionButton: { // Common style for like/comment buttons
+  actionButton: { // Common style for like/comment/delete buttons
     color: '#262626', // Darker icon color
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.03)',
     }
+  },
+  cardContent: { // Style for the content area below actions
+    paddingTop: theme.spacing(1), // Adjust top padding as needed
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingBottom: theme.spacing(2), // Keep other paddings consistent with title/message original intent
   },
   // overlay and overlay2 are removed as their functionality will be integrated into cardHeader and card content
   // border, fullHeightCard, grid classes can be removed if no longer used after JSX changes.

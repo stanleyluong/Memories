@@ -3,6 +3,7 @@ import decode from "jwt-decode";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useHistory, useLocation } from "react-router-dom";
+import { setAxiosAuthHeader } from '../../api';
 import memories from "../../images/memories.png";
 import useStyles from "./styles";
 
@@ -26,6 +27,8 @@ const Navbar = () => {
 
   const handleLogout = useCallback(() => {
     dispatch({ type: "LOGOUT" });
+    setAxiosAuthHeader(null);
+    localStorage.removeItem('profile');
     history.push("/");
     setUser(null);
     handleMenuClose();
@@ -64,7 +67,6 @@ const Navbar = () => {
               aria-haspopup="true"
               onClick={handleMenuOpen}
               className={classes.profileButton}
-              color="inherit"
             >
               <Avatar
                 className={classes.purple}

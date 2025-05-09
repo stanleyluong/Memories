@@ -1,4 +1,4 @@
-import { Container, Dialog, DialogContent, DialogTitle, Fab, Grid, Grow } from "@material-ui/core";
+import { Container, Dialog, DialogContent, DialogTitle, Fab, Grid, Grow, Typography } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ const Home = () => {
   const [openFormModal, setOpenFormModal] = useState(false);
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
-  const posts = useSelector((state) => state.posts);
+  const { items: postsItems, isLoading, error: postsError } = useSelector((state) => state.posts);
   const classes = useStyles();
 
   const handleOpenFormModal = () => {
@@ -33,7 +33,7 @@ const Home = () => {
     dispatch(getPosts());
   }, [dispatch]);
 
-  const filteredPosts = posts?.length > 0 ? posts.filter(
+  const filteredPosts = postsItems?.length > 0 ? postsItems.filter(
     (post) =>
       (post.name &&
         post.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -64,7 +64,8 @@ const Home = () => {
           className={classes.mainContainer}
         >
           <Grid item xs={12} sm={10} md={8}>
-            <Posts setCurrentId={handleEditPost} posts={filteredPosts} />
+            <Posts setCurrentId={handleEditPost} posts={filteredPosts} isLoading={isLoading} />
+            {postsError && <Typography color="error" align="center" style={{ marginTop: '20px' }}>Error: {postsError.toString()}</Typography>}
           </Grid>
         </Grid>
 

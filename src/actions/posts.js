@@ -2,20 +2,23 @@ import * as api from "../api/index";
 import {
     CREATE,
     DELETE,
-    FETCH_ALL,
+    FETCH_POSTS_FAILURE,
+    FETCH_POSTS_START,
+    FETCH_POSTS_SUCCESS,
     LIKE,
     LIKE_POST_FAILED,
     OPTIMISTIC_LIKE_POST,
     UPDATE,
 } from "../constants/actionTypes";
 
-export const getPosts = () => async (dispatch) => {
+export const getPosts = (page = 1) => async (dispatch) => {
   try {
-    const { data } = await api.fetchPosts();
-    dispatch({ type: FETCH_ALL, payload: data.data });
+    dispatch({ type: FETCH_POSTS_START });
+    const { data } = await api.fetchPosts(page);
+    dispatch({ type: FETCH_POSTS_SUCCESS, payload: data });
   } catch (error) {
-    console.log(error);
-    // Not rethrowing here as getPosts failures are often handled by showing empty state or loader
+    console.error("Error in getPosts action:", error.response?.data || error.message);
+    dispatch({ type: FETCH_POSTS_FAILURE, payload: error.response?.data?.message || error.message || "Failed to fetch posts" });
   }
 };
 

@@ -36,6 +36,7 @@ export default makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     marginLeft: theme.spacing(1),
+    color: theme.palette.text.primary,
   },
   brandContainer: {
     display: "flex",

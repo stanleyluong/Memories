@@ -27,6 +27,14 @@ const Post = ({ post, setCurrentId }) => {
 
   const currentUserId = user?.result?.sub || user?.result?.googleId || user?.result?.id;
 
+  // Construct S3 image URL
+  let imageUrl = post.selectedFile; // Default to what's in selectedFile
+  // Check if selectedFile is likely an S3 key (i.e., not a full URL or base64)
+  if (post.selectedFile && !post.selectedFile.startsWith('http') && !post.selectedFile.startsWith('data:')) {
+    const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL || `https://DEFAULT_S3_BUCKET.s3.DEFAULT_REGION.amazonaws.com/`; // Fallback just in case
+    imageUrl = `${s3BaseUrl}${post.selectedFile}`.replace(/\/\//g, '/'); // Ensure no double slashes, except after protocol
+  }
+
   const handleOpenImageModal = () => setOpenImageModal(true);
   const handleCloseImageModal = () => setOpenImageModal(false);
 
@@ -72,6 +80,7 @@ const Post = ({ post, setCurrentId }) => {
             {post.name}
           </Typography>
           <Typography className={classes.timestamp} variant="caption">
+            {console.log(`Post ID: ${post.id}, createdAt raw: ${post.createdAt}, typeof: ${typeof post.createdAt}`)}
             {moment(post.createdAt).fromNow()}
           </Typography>
         </div>
@@ -92,13 +101,40 @@ const Post = ({ post, setCurrentId }) => {
       {post.selectedFile && (
         <CardMedia
           className={classes.media}
-          image={post.selectedFile}
+          image={imageUrl}
           title={post.title}
           onClick={handleOpenImageModal}
         />
       )}
 
-      <CardContent>
+      <CardActions className={classes.cardActions}>
+        <Button
+          size="small"
+          className={classes.actionButton}
+          disabled={!user?.result}
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch(likePost(post.id));
+          }}
+        >
+          <Likes />
+        </Button>
+        {isCreator && (
+          <IconButton
+            size="small"
+            className={classes.actionButton}
+            style={{ color: '#262626' }}
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatch(deletePost(post.id));
+            }}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        )}
+      </CardActions>
+
+      <CardContent className={classes.cardContent}>
         <Typography className={classes.title} variant="h6" component="h2">
           {post.title}
         </Typography>
@@ -114,38 +150,11 @@ const Post = ({ post, setCurrentId }) => {
         )}
       </CardContent>
 
-      <CardActions className={classes.cardActions}>
-        <Button
-          size="small"
-          className={classes.actionButton}
-          disabled={!user?.result}
-          onClick={(e) => {
-            e.stopPropagation();
-            dispatch(likePost(post.id));
-          }}
-        >
-          <Likes />
-        </Button>
-        {isCreator && (
-          <Button
-            size="small"
-            className={classes.actionButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              dispatch(deletePost(post.id));
-            }}
-          >
-            <DeleteIcon fontSize="small" />
-            &nbsp;Delete 
-          </Button>
-        )}
-      </CardActions>
-
       {post.selectedFile && (
           <ImageModal
             open={openImageModal}
             handleClose={handleCloseImageModal}
-            imageUrl={post.selectedFile}
+            imageUrl={imageUrl}
           />
       )}
     </Card>
