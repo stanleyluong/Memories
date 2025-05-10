@@ -32,6 +32,7 @@ const Post = ({ post, setCurrentId }) => {
   // Check if selectedFile is likely an S3 key (i.e., not a full URL or base64)
   if (post.selectedFile && !post.selectedFile.startsWith('http') && !post.selectedFile.startsWith('data:')) {
     const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL || `https://DEFAULT_S3_BUCKET.s3.DEFAULT_REGION.amazonaws.com/`; // Fallback just in case
+    console.log(`S3 Base URL: ${s3BaseUrl}`);
     imageUrl = `${s3BaseUrl}${post.selectedFile}`.replace(/\/\//g, '/'); // Ensure no double slashes, except after protocol
   }
 
