@@ -1,12 +1,12 @@
 import {
-    Avatar,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    CardMedia,
-    IconButton,
-    Typography,
+  Avatar,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  IconButton,
+  Typography,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -33,7 +33,9 @@ const Post = ({ post, setCurrentId }) => {
   if (post.selectedFile && !post.selectedFile.startsWith('http') && !post.selectedFile.startsWith('data:')) {
     const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL || `https://DEFAULT_S3_BUCKET.s3.DEFAULT_REGION.amazonaws.com/`; // Fallback just in case
     console.log(`S3 Base URL: ${s3BaseUrl}`);
-    imageUrl = `${s3BaseUrl}${post.selectedFile}`.replace(/\/\//g, '/'); // Ensure no double slashes, except after protocol
+    // Safe join: ensure only one slash between base and key, but don't break https://
+    imageUrl = s3BaseUrl.replace(/\/$/, '') + '/' + post.selectedFile.replace(/^\//, '');
+    console.log(`Image URL: ${imageUrl}`);
   }
 
   const handleOpenImageModal = () => setOpenImageModal(true);
